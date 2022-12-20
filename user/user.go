@@ -93,3 +93,33 @@ func (am *AuthMenu) Login(nama string, password string) (User, error) {
 
 	return res, nil
 }
+
+func (am *AuthMenu) Delete(deleteUser User) (bool, error) {
+
+	deleteQry, err := am.DB.Prepare("DELETE FROM pegawai WHERE id_pegawai=?")
+	if err != nil {
+		log.Println("prepare delete pegawai ", err.Error())
+		return false, errors.New("prepare statement delete pegawai error")
+	}
+
+	// menjalankan query prepare
+	res, err := deleteQry.Exec(deleteUser.ID)
+	if err != nil {
+		log.Println("delete pegawai ", err.Error())
+		return false, errors.New("delete pegawai error")
+	}
+	// Cek jumlah baris yang terpengaruh query diatas
+	affRows, err := res.RowsAffected()
+
+	if err != nil {
+		log.Println("after Delete pegawai", err.Error())
+		return false, errors.New("error setelah Delete")
+	}
+
+	if affRows <= 0 {
+		log.Println("no record affected")
+		return false, errors.New("no record")
+	}
+
+	return true, nil
+}
