@@ -16,12 +16,6 @@ type AuthMenu struct {
 	DB *sql.DB
 }
 
-// func NewAuthMenu() *AuthMenu {
-// 	cfg := config.ReadConfig()
-// 	conn := config.ConnectSQL(*cfg)
-// 	return &AuthMenu{DB: conn}
-// }
-
 func (am *AuthMenu) Duplicate(name string) bool {
 	res := am.DB.QueryRow("SELECT id_pegawai FROM pegawai where nama = ?", name)
 	var idExist int
