@@ -52,6 +52,7 @@ CREATE TABLE item (
 	PRIMARY KEY (no_nota, id_barang)
 );
 
+INSERT INTO pegawai VALUES (NULL,'admin','admin');
 INSERT INTO pegawai VALUES (NULL,'andi','andi123');
 
 INSERT INTO konsumen VALUES ('08123456789','bejo',1);
