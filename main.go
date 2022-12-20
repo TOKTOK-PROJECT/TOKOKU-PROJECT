@@ -6,6 +6,7 @@ import (
 	"os"
 	"todo/barang"
 	"todo/config"
+	"todo/konsumen"
 	"todo/user"
 )
 
@@ -15,6 +16,7 @@ func main() {
 	var conn = config.ConnectSQL(*cfg)
 	var authMenu = user.AuthMenu{DB: conn}
 	var barangMenu = barang.BarangMenu{DB: conn}
+	var konsumMenu = konsumen.KonsumMenu{DB: conn}
 
 	for inputMenu != 0 {
 		fmt.Println(" ")
@@ -100,7 +102,8 @@ func main() {
 
 					case 3:
 						var deleteBarang barang.Barang
-						fmt.Println("MENU HAPUS BARANG")
+						fmt.Println("\n--- Halaman Hapus Barang ---")
+						fmt.Println("=============================")
 						fmt.Println("masukkan ID barang yang ingin dihapus :")
 						fmt.Scanln(&deleteBarang.ID)
 						res, err := barangMenu.Delete(deleteBarang)
@@ -112,9 +115,22 @@ func main() {
 						} else {
 							fmt.Println("Gagal menghapus Barang")
 						}
-						fmt.Println("=========Data Barang=========")
-					case 4:
 
+					case 4:
+						var deleteKonsumen konsumen.Konsumen
+						fmt.Println("\n--- Halaman Hapus Pelanggan ---")
+						fmt.Println("===============================")
+						fmt.Println("masukkan nomor HP pelanggan yang ingin dihapus :")
+						fmt.Scanln(&deleteKonsumen.HP)
+						res, err := konsumMenu.DeleteKonsumen(deleteKonsumen)
+						if err != nil {
+							fmt.Println(err.Error())
+						}
+						if res {
+							fmt.Println("Sukses menghapus data pelanggan")
+						} else {
+							fmt.Println("Gagal menghapus data pelanggan")
+						}
 					case 5:
 
 					case 9:
@@ -208,6 +224,31 @@ func main() {
 						}
 						fmt.Println(updateStok)
 					case 5:
+						var newKonsumen konsumen.Konsumen
+						in := bufio.NewReader(os.Stdin)
+						fmt.Println("\n--- Halaman Tambah Pelanggan ---")
+						fmt.Println("================================")
+						fmt.Print("Masukkan nama : ")
+						name, _ := in.ReadString('\n')
+						name = name[:len(name)-2]
+						newKonsumen.Nama = name
+						fmt.Print("Masukkan nomor telepon : ")
+						hp, _ := in.ReadString('\n')
+						hp = hp[:len(hp)-2]
+						newKonsumen.HP = hp
+						// fmt.Print("Masukkan ID Pegawai : ")
+						// idpeg, _ := in.ReadString('\n')
+						// idpeg = idpeg[:len(idpeg)-2]
+						newKonsumen.IdPegawai = res.ID
+						res, err := konsumMenu.RegistKonsumen(newKonsumen)
+						if err != nil {
+							fmt.Println(err.Error())
+						}
+						if res {
+							fmt.Println("Sukses mendaftarkan pelanggan")
+						} else {
+							fmt.Println("Gagal mendaftarn pelanggan")
+						}
 
 					case 6:
 
