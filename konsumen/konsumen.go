@@ -91,3 +91,23 @@ func (km *KonsumMenu) DeleteKonsumen(deleteKonsumen Konsumen) (bool, error) {
 
 	return true, nil
 }
+
+func (km *KonsumMenu) Show() (pelanggan []Konsumen) {
+	rows, e := km.DB.Query(
+		`SELECT hp_konsumen,
+		nama
+		FROM konsumen;`)
+
+	if e != nil {
+		log.Println(e)
+		return
+	}
+
+	pelanggan = make([]Konsumen, 0)
+	for rows.Next() {
+		konsumen := Konsumen{}
+		rows.Scan(&konsumen.HP, &konsumen.Nama)
+		pelanggan = append(pelanggan, konsumen)
+	}
+	return pelanggan
+}
