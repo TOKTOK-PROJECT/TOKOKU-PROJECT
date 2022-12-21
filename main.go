@@ -6,6 +6,7 @@ import (
 	"os"
 	"todo/barang"
 	"todo/config"
+	"todo/item"
 	"todo/konsumen"
 	"todo/transaksi"
 	"todo/user"
@@ -19,6 +20,7 @@ func main() {
 	var barangMenu = barang.BarangMenu{DB: conn}
 	var konsumMenu = konsumen.KonsumMenu{DB: conn}
 	var transaksiMenu = transaksi.TransaksiMenu{DB: conn}
+	var itemMenu = item.ItemMenu{DB: conn}
 
 	for inputMenu != 0 {
 		fmt.Println("-- Selamat Datang di Aplikasi TOKOKU --")
@@ -60,7 +62,7 @@ func main() {
 					fmt.Println("5. Hapus Transaksi")
 					fmt.Println("9. Logout")
 					fmt.Println("==========================")
-					fmt.Println("Silakan masukkan pilihan:")
+					fmt.Print("Silakan masukkan pilihan:")
 					fmt.Scanln(&loginMenu)
 					switch loginMenu {
 					case 1:
@@ -271,7 +273,7 @@ func main() {
 							fmt.Println("=========================")
 							fmt.Println("1. Tambah Pelanggan")
 							fmt.Println("2. Lihat Daftar Pelanggan")
-							fmt.Println("3. Cetak Transaksi")
+							fmt.Println("3. Transaksi")
 							fmt.Println("9. Logout")
 							fmt.Println("=========================")
 							fmt.Println("silakan masukkan pilihan anda :")
@@ -314,19 +316,53 @@ func main() {
 								hp, _ := in.ReadString('\n')
 								hp = hp[:len(hp)-2]
 								newTransaksi.HpKonsumen = hp
-								fmt.Print("Masukkan ID Barang : ")
-								fmt.Scanln(&newTransaksi.IdBarang)
-								fmt.Print("Masukkan jumlah barang : ")
-								fmt.Scanln(&newTransaksi.Kuantitas)
-								res, err := transaksiMenu.AddTransaksi(newTransaksi)
+								result, err := transaksiMenu.AddTransaksi(newTransaksi)
 								if err != nil {
 									fmt.Println(err.Error())
 								}
-								if res {
+								if result {
 									fmt.Println("Transaksi Berhasil")
 								} else {
 									fmt.Println("Transaksi Gagal")
 								}
+								fmt.Println(newTransaksi)
+								fmt.Println("\n--- DAFTAR TRANSAKSI ---")
+								fmt.Println("========================")
+								fmt.Println(transaksiMenu.Show())
+
+								tambahItem := true
+								for tambahItem {
+									input := 0
+									fmt.Println("1. Tambah Belanjaan")
+									fmt.Println("9. Back")
+									fmt.Println("=========================")
+									fmt.Println("silakan masukkan pilihan anda :")
+									fmt.Scanln(&input)
+									switch input {
+									case 1:
+										var newItem item.Item
+										fmt.Println("================================")
+										fmt.Print("Masukkan nomor nota : ")
+										fmt.Scanln(&newItem.NoNota)
+										// newItem.NoNota = newTransaksi.NoNota
+										fmt.Print("Masukkan ID barang : ")
+										fmt.Scanln(&newItem.IdBarang)
+										fmt.Print("Masukkan jumlah barang : ")
+										fmt.Scanln(&newItem.Kuantitas)
+										hasil, err := itemMenu.Insert(newItem)
+										if err != nil {
+											fmt.Println(err.Error())
+										}
+										if hasil {
+											fmt.Println("Belanjaan ditambahkan")
+										} else {
+											fmt.Println("Gagal menambahkan belanjaan")
+										}
+									case 9:
+										tambahItem = false
+									}
+								}
+								// fmt.Println("Tanggal ")
 							case 9:
 								isTransaksi = false
 							}
