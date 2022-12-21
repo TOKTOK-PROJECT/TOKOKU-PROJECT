@@ -7,6 +7,7 @@ import (
 	"todo/barang"
 	"todo/config"
 	"todo/konsumen"
+	"todo/transaksi"
 	"todo/user"
 )
 
@@ -17,6 +18,7 @@ func main() {
 	var authMenu = user.AuthMenu{DB: conn}
 	var barangMenu = barang.BarangMenu{DB: conn}
 	var konsumMenu = konsumen.KonsumMenu{DB: conn}
+	var transaksiMenu = transaksi.TransaksiMenu{DB: conn}
 
 	for inputMenu != 0 {
 		fmt.Println("-- Selamat Datang di Aplikasi TOKOKU --")
@@ -145,12 +147,33 @@ func main() {
 						fmt.Println("========================")
 						fmt.Println(konsumMenu.Show())
 					case 5:
+						fmt.Println("\n--- DAFTAR TRANSAKSI ---")
+						fmt.Println("========================")
+						fmt.Println(transaksiMenu.Show())
+						fmt.Println("========================")
 
+						var deleteTransaksi transaksi.Transaksi
+						fmt.Println("\n--- Halaman Hapus Transaksi ---")
+						fmt.Println("===============================")
+						fmt.Println("masukkan nomor nota transaksi yang ingin dihapus :")
+						fmt.Scanln(&deleteTransaksi.NoNota)
+						res, err := transaksiMenu.DeleteTransaksi(deleteTransaksi)
+						if err != nil {
+							fmt.Println(err.Error())
+						}
+						if res {
+							fmt.Println("Sukses menghapus data transaksi")
+						} else {
+							fmt.Println("Gagal menghapus data transaksi")
+						}
+
+						fmt.Println("\n--- DAFTAR TRANSAKSI ---")
+						fmt.Println("========================")
+						fmt.Println(transaksiMenu.Show())
 					case 9:
 						isLogin = false
 					}
 				}
-
 			}
 
 			if res.ID > 0 && inputNama != "admin" {
@@ -164,9 +187,9 @@ func main() {
 					fmt.Println("2. Lihat Barang")
 					fmt.Println("3. Edit Deskripsi")
 					fmt.Println("4. Update Stok Barang")
-					fmt.Println("5. Tambah Pelanggan")
-					fmt.Println("6. Transaksi")
+					fmt.Println("5. Transaksi dan Pelanggan")
 					fmt.Println("9. Logout")
+					fmt.Println("==========================")
 					fmt.Print("Masukkan pilihan anda : ")
 					fmt.Scanln(&loginMenu)
 					switch loginMenu {
@@ -192,6 +215,10 @@ func main() {
 						}
 						inputBarang.ID = barRes
 						fmt.Println(inputBarang)
+
+						fmt.Println("\n--- DAFTAR BARANG ---")
+						fmt.Println("=====================")
+						fmt.Println(barangMenu.Show())
 					case 2:
 						fmt.Println("\n--- DAFTAR BARANG ---")
 						fmt.Println("=====================")
@@ -237,34 +264,73 @@ func main() {
 						}
 						fmt.Println(updateStok)
 					case 5:
-						var newKonsumen konsumen.Konsumen
-						in := bufio.NewReader(os.Stdin)
-						fmt.Println("\n--- Halaman Tambah Pelanggan ---")
-						fmt.Println("================================")
-						fmt.Print("Masukkan nama : ")
-						name, _ := in.ReadString('\n')
-						name = name[:len(name)-2]
-						newKonsumen.Nama = name
-						fmt.Print("Masukkan nomor telepon : ")
-						hp, _ := in.ReadString('\n')
-						hp = hp[:len(hp)-2]
-						newKonsumen.HP = hp
-						// fmt.Print("Masukkan ID Pegawai : ")
-						// idpeg, _ := in.ReadString('\n')
-						// idpeg = idpeg[:len(idpeg)-2]
-						newKonsumen.IdPegawai = res.ID
-						res, err := konsumMenu.RegistKonsumen(newKonsumen)
-						if err != nil {
-							fmt.Println(err.Error())
+						isTransaksi := true
+						for isTransaksi {
+							var choice int
+							fmt.Println("\n--- Halaman Transaksi ---")
+							fmt.Println("=========================")
+							fmt.Println("1. Tambah Pelanggan")
+							fmt.Println("2. Lihat Daftar Pelanggan")
+							fmt.Println("3. Cetak Transaksi")
+							fmt.Println("9. Logout")
+							fmt.Println("=========================")
+							fmt.Println("silakan masukkan pilihan anda :")
+							fmt.Scanln(&choice)
+							switch choice {
+							case 1:
+								var newKonsumen konsumen.Konsumen
+								in := bufio.NewReader(os.Stdin)
+								fmt.Println("\n--- Halaman Tambah Pelanggan ---")
+								fmt.Println("================================")
+								fmt.Print("Masukkan nama : ")
+								name, _ := in.ReadString('\n')
+								name = name[:len(name)-2]
+								newKonsumen.Nama = name
+								fmt.Print("Masukkan nomor telepon : ")
+								hp, _ := in.ReadString('\n')
+								hp = hp[:len(hp)-2]
+								newKonsumen.HP = hp
+								newKonsumen.IdPegawai = res.ID
+								res, err := konsumMenu.RegistKonsumen(newKonsumen)
+								if err != nil {
+									fmt.Println(err.Error())
+								}
+								if res {
+									fmt.Println("Sukses mendaftarkan pelanggan")
+								} else {
+									fmt.Println("Gagal mendaftarkan pelanggan")
+								}
+							case 2:
+								fmt.Println("\n--- DAFTAR PELANGGAN ---")
+								fmt.Println("========================")
+								fmt.Println(konsumMenu.Show())
+							case 3:
+								var newTransaksi transaksi.Transaksi
+								in := bufio.NewReader(os.Stdin)
+								fmt.Println("\n--- Halaman Buat Transaksi ---")
+								fmt.Println("===============================")
+								newTransaksi.IdPegawai = res.ID
+								fmt.Print("Masukkan nomor HP pelanggan : ")
+								hp, _ := in.ReadString('\n')
+								hp = hp[:len(hp)-2]
+								newTransaksi.HpKonsumen = hp
+								fmt.Print("Masukkan ID Barang : ")
+								fmt.Scanln(&newTransaksi.IdBarang)
+								fmt.Print("Masukkan jumlah barang : ")
+								fmt.Scanln(&newTransaksi.Kuantitas)
+								res, err := transaksiMenu.AddTransaksi(newTransaksi)
+								if err != nil {
+									fmt.Println(err.Error())
+								}
+								if res {
+									fmt.Println("Transaksi Berhasil")
+								} else {
+									fmt.Println("Transaksi Gagal")
+								}
+							case 9:
+								isTransaksi = false
+							}
 						}
-						if res {
-							fmt.Println("Sukses mendaftarkan pelanggan")
-						} else {
-							fmt.Println("Gagal mendaftarn pelanggan")
-						}
-
-					case 6:
-
 					case 9:
 						isLogin = false
 					}
