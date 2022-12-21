@@ -274,6 +274,7 @@ func main() {
 							fmt.Println("1. Tambah Pelanggan")
 							fmt.Println("2. Lihat Daftar Pelanggan")
 							fmt.Println("3. Transaksi")
+							fmt.Println("4. Cetak Nota")
 							fmt.Println("9. Logout")
 							fmt.Println("=========================")
 							fmt.Println("silakan masukkan pilihan anda :")
@@ -362,7 +363,8 @@ func main() {
 										tambahItem = false
 									}
 								}
-								// fmt.Println("Tanggal ")
+							case 4:
+
 							case 9:
 								isTransaksi = false
 							}
