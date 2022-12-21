@@ -53,17 +53,22 @@ CREATE TABLE item (
 );
 
 INSERT INTO pegawai VALUES (NULL,'admin','admin');
-INSERT INTO pegawai VALUES (NULL,'andi','andi123');
+INSERT INTO pegawai VALUES (NULL,'putra','putra123');
+INSERT INTO pegawai VALUES (NULL,'yuda','yuda123');
 
 INSERT INTO konsumen VALUES ('08123456789','bejo',1);
 INSERT INTO konsumen VALUES ('08111','budi',2);
 
-INSERT INTO barang VALUES (NULL,'indomie','mie goreng', 48, 1);
-INSERT INTO barang VALUES (NULL,'le minerale','air minum', 20, 1);
+INSERT INTO barang VALUES (NULL,'indomie','mie goreng', 48, 2);
+INSERT INTO barang VALUES (NULL,'le minerale','air minum kemasan', 20, 2);
+INSERT INTO barang VALUES (NULL,'tango','waffer rasa vanilla', 30, 2);
+INSERT INTO barang VALUES (NULL,'sprite','minuman kemasan', 50, 3);
+INSERT INTO barang VALUES (NULL,'sari roti','roti rasa coklat', 20, 3);
+INSERT INTO barang VALUES (NULL,'taro','cemilan', 100, 3);
 
-INSERT INTO transaksi VALUES (NULL, 1, '08123456789', now());
+INSERT INTO transaksi VALUES (NULL, 2, '08123456789', now());
 
-INSERT INTO item VALUES (1, 1, 5);
+INSERT INTO item VALUES (1, 1, 2);
 
 SELECT * FROM pegawai p ;
 SELECT * FROM konsumen k ;
