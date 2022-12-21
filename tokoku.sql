@@ -56,8 +56,10 @@ INSERT INTO pegawai VALUES (NULL,'admin','admin');
 INSERT INTO pegawai VALUES (NULL,'andi','andi123');
 
 INSERT INTO konsumen VALUES ('08123456789','bejo',1);
+INSERT INTO konsumen VALUES ('08111','budi',2);
 
 INSERT INTO barang VALUES (NULL,'indomie','mie goreng', 48, 1);
+INSERT INTO barang VALUES (NULL,'le minerale','air minum', 20, 1);
 
 INSERT INTO transaksi VALUES (NULL, 1, '08123456789', now());
 
