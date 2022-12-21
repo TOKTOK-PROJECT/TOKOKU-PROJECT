@@ -117,3 +117,23 @@ func (am *AuthMenu) Delete(deleteUser User) (bool, error) {
 
 	return true, nil
 }
+
+func (am *AuthMenu) Show() (user2 []User) {
+	rows, e := am.DB.Query(
+		`SELECT id_pegawai,
+		nama
+		FROM pegawai;`)
+
+	if e != nil {
+		log.Println(e)
+		return
+	}
+
+	user2 = make([]User, 0)
+	for rows.Next() {
+		user := User{}
+		rows.Scan(&user.ID, &user.Nama)
+		user2 = append(user2, user)
+	}
+	return user2
+}
