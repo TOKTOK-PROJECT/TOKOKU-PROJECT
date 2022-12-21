@@ -19,20 +19,17 @@ func main() {
 	var konsumMenu = konsumen.KonsumMenu{DB: conn}
 
 	for inputMenu != 0 {
-		fmt.Println(" ")
 		fmt.Println("-- Selamat Datang di Aplikasi TOKOKU --")
-		fmt.Println(" ")
-		fmt.Println("================= MENU =================")
+		fmt.Println("\n================= MENU =================")
 		fmt.Println("1. Login")
 		fmt.Println("0. Exit")
-		fmt.Println("===================================")
+		fmt.Println("========================================")
 		fmt.Println("Silakan masukkan pilihan anda : ")
 		fmt.Scanln(&inputMenu)
 		if inputMenu == 1 {
 			var inputNama, inputPassword string
 			in := bufio.NewReader(os.Stdin)
-			fmt.Println(" ")
-			fmt.Println("------- MENU LOGIN -------")
+			fmt.Println("\n------- MENU LOGIN -------")
 			fmt.Println("==========================")
 			fmt.Print("Masukkan nama : ")
 			name, _ := in.ReadString('\n')
@@ -52,7 +49,7 @@ func main() {
 				fmt.Println("\n--- Login sebagai Admin ---")
 				for isLogin {
 					loginMenu := 0
-					fmt.Println("------- MENU ADMIN -------")
+					fmt.Println("\n------- MENU ADMIN -------")
 					fmt.Println("==========================")
 					fmt.Println("1. Tambah Pegawai")
 					fmt.Println("2. Hapus Pegawai")
@@ -60,11 +57,13 @@ func main() {
 					fmt.Println("4. Hapus Pelanggan")
 					fmt.Println("5. Hapus Transaksi")
 					fmt.Println("9. Logout")
+					fmt.Println("==========================")
 					fmt.Println("Silakan masukkan pilihan:")
 					fmt.Scanln(&loginMenu)
 					switch loginMenu {
 					case 1:
-						fmt.Println("MENU TAMBAH PEGAWAI")
+						fmt.Println("\n--- Halaman Tambah Pegawai ---")
+						fmt.Println("==============================")
 						var newUser user.User
 						in := bufio.NewReader(os.Stdin)
 						fmt.Print("Masukkan nama : ")
@@ -85,9 +84,13 @@ func main() {
 							fmt.Println("Gagal mendaftarn data")
 						}
 
+						fmt.Println("\n--- DAFTAR PEGAWAI ---")
+						fmt.Println("======================")
+						fmt.Println(authMenu.Show())
 					case 2:
 						var deleteUser user.User
-						fmt.Println("MENU HAPUS PEGAWAI")
+						fmt.Println("\n--- Halaman Hapus Pegawai ---")
+						fmt.Println("=============================")
 						fmt.Println("masukkan ID pegawai yang ingin dihapus :")
 						fmt.Scanln(&deleteUser.ID)
 						res, err := authMenu.Delete(deleteUser)
@@ -100,6 +103,9 @@ func main() {
 							fmt.Println("Gagal menghapus Pegawai")
 						}
 
+						fmt.Println("\n--- DAFTAR PEGAWAI ---")
+						fmt.Println("======================")
+						fmt.Println(authMenu.Show())
 					case 3:
 						var deleteBarang barang.Barang
 						fmt.Println("\n--- Halaman Hapus Barang ---")
@@ -116,6 +122,9 @@ func main() {
 							fmt.Println("Gagal menghapus Barang")
 						}
 
+						fmt.Println("\n--- DAFTAR BARANG ---")
+						fmt.Println("=====================")
+						fmt.Println(barangMenu.Show())
 					case 4:
 						var deleteKonsumen konsumen.Konsumen
 						fmt.Println("\n--- Halaman Hapus Pelanggan ---")
@@ -131,6 +140,10 @@ func main() {
 						} else {
 							fmt.Println("Gagal menghapus data pelanggan")
 						}
+
+						fmt.Println("\n--- DAFTAR PELANGGAN ---")
+						fmt.Println("========================")
+						fmt.Println(konsumMenu.Show())
 					case 5:
 
 					case 9:
