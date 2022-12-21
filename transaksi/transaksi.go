@@ -10,8 +10,6 @@ type Transaksi struct {
 	NoNota     int
 	IdPegawai  int
 	HpKonsumen string
-	IdBarang   int
-	Kuantitas  int
 	Tanggal    string
 }
 
@@ -21,14 +19,14 @@ type TransaksiMenu struct {
 
 func (tm *TransaksiMenu) AddTransaksi(newTransaksi Transaksi) (bool, error) {
 	// menyiapakn query untuk insert
-	tambahTransaksiQry, err := tm.DB.Prepare("INSERT INTO transaksi (id_pegawai, hp_konsumen, id_barang, kuantitas) values (?,?,?,?)")
+	tambahTransaksiQry, err := tm.DB.Prepare("INSERT INTO transaksi (id_pegawai, hp_konsumen) values (?,?)")
 	if err != nil {
 		log.Println("prepare insert konsumen ", err.Error())
 		return false, errors.New("prepare statement insert konsumen error")
 	}
 
 	// menjalankan query prepare
-	res, err := tambahTransaksiQry.Exec(newTransaksi.IdPegawai, newTransaksi.HpKonsumen, newTransaksi.IdBarang, newTransaksi.Kuantitas)
+	res, err := tambahTransaksiQry.Exec(newTransaksi.IdPegawai, newTransaksi.HpKonsumen)
 	if err != nil {
 		log.Println("tambah transaksi ", err.Error())
 		return false, errors.New("tambah transaksi error")
@@ -84,8 +82,6 @@ func (tm *TransaksiMenu) Show() (transaksi []Transaksi) {
 		`SELECT no_nota,
 		id_pegawai,
 		hp_konsumen,
-		id_barang,
-		kuantitas,
 		tanggal_cetak
 		FROM transaksi;`)
 
@@ -97,7 +93,7 @@ func (tm *TransaksiMenu) Show() (transaksi []Transaksi) {
 	transaksi = make([]Transaksi, 0)
 	for rows.Next() {
 		trans := Transaksi{}
-		rows.Scan(&trans.NoNota, &trans.IdPegawai, &trans.HpKonsumen, &trans.IdBarang, &trans.Kuantitas, &trans.Tanggal)
+		rows.Scan(&trans.NoNota, &trans.IdPegawai, &trans.HpKonsumen, &trans.Tanggal)
 		transaksi = append(transaksi, trans)
 	}
 	return transaksi
