@@ -406,10 +406,8 @@ func main() {
 								fmt.Print(colorText("Masukkan nomor Nota : ", "yellow"))
 								fmt.Scanln(&newCetak.NoNota)
 								fmt.Println(colorText("\n======== Tokoku ========", "green"))
-								fmt.Println(colorText("--- Cetak Transaksi ---", "green"))
+								fmt.Println(colorText("--- Cetak Nota ---", "green"))
 								fmt.Println(" ")
-								// pembeli := transaksiMenu.Pembeli(newCetak)
-								// kasir := transaksiMenu.Kasir(newCetak)
 								hasil, err := transaksiMenu.Cetak(newCetak)
 								if err != nil {
 									fmt.Println(err.Error())
