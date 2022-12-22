@@ -103,7 +103,7 @@ func (tm *TransaksiMenu) DeleteTransaksi(DeleteTransaksi Transaksi) (bool, error
 	return true, nil
 }
 
-func (tm *TransaksiMenu) Cetak(newCetak Transaksi) (transaksi []Transaksi) {
+func (tm *TransaksiMenu) Cetak(newCetak Transaksi) ([]Transaksi, error) {
 	// menyiapakn query untuk insert
 	cetakTransaksiQry, err := tm.DB.Prepare(
 		`SELECT t.tanggal_cetak,  k.nama, p.nama, b.nama_barang, i.kuantitas 
@@ -114,22 +114,81 @@ func (tm *TransaksiMenu) Cetak(newCetak Transaksi) (transaksi []Transaksi) {
 		JOIN konsumen k on k.hp_konsumen = t.hp_konsumen
 		where i.no_nota = ?;`)
 	if err != nil {
-		log.Println("prepare insert konsumen ", err.Error())
-		return
+		log.Println("prepare cetak transaksi ", err.Error())
+		return nil, errors.New("select cetak transaksi error")
 	}
 
 	// menjalankan query prepare
 	rows, err := cetakTransaksiQry.Query(newCetak.NoNota)
 	if err != nil {
 		log.Println("cetak transaksi ", err.Error())
-		return
+		return nil, errors.New("select cetak transaksi error")
 	}
 
-	transaksi = make([]Transaksi, 0)
+	transaksi := []Transaksi{}
 	for rows.Next() {
 		trans := Transaksi{}
-		rows.Scan(&trans.Tanggal, &trans.NamaPembeli, &trans.NamaPegawai, &trans.NamaBarang, &trans.Kuantitas)
+		err = rows.Scan(&trans.Tanggal, &trans.NamaPembeli, &trans.NamaPegawai, &trans.NamaBarang, &trans.Kuantitas)
+		if err != nil {
+			log.Println("error Loop baris untuk memasukkan data ke struct", err.Error())
+			return transaksi, err
+		}
 		transaksi = append(transaksi, trans)
 	}
-	return transaksi
+	return transaksi, nil
 }
+
+// func (tm *TransaksiMenu) Pembeli(newCetak Transaksi) (transaksi []Transaksi) {
+// 	// menyiapakn query untuk insert
+// 	cetakTransaksiQry, err := tm.DB.Prepare(
+// 		`SELECT k.nama
+// 		FROM transaksi t
+// 		join konsumen k on t.hp_konsumen = k.hp_konsumen
+// 		WHERE t.no_nota = ?;`)
+// 	if err != nil {
+// 		log.Println("prepare insert konsumen ", err.Error())
+// 		return
+// 	}
+
+// 	// menjalankan query prepare
+// 	rows, err := cetakTransaksiQry.Query(newCetak.NoNota)
+// 	if err != nil {
+// 		log.Println("cetak transaksi ", err.Error())
+// 		return
+// 	}
+
+// 	transaksi = make([]Transaksi, 0)
+// 	for rows.Next() {
+// 		trans := Transaksi{}
+// 		rows.Scan(&trans.NamaPembeli)
+// 		transaksi = append(transaksi, trans)
+// 	}
+// 	return transaksi
+// }
+
+// func (tm *TransaksiMenu) Kasir(newCetak Transaksi) (transaksi []Transaksi) {
+// 	// menyiapakn query untuk insert
+// 	cetakTransaksiQry, err := tm.DB.Prepare(
+// 		`SELECT p.nama
+// 		FROM transaksi t
+// 		join pegawai p on t.id_pegawai = p.id_pegawai
+// 		where t.no_nota = ?;`)
+// 	if err != nil {
+// 		log.Println("prepare insert konsumen ", err.Error())
+// 		return
+// 	}
+
+// 	// menjalankan query prepare
+// 	rows, err := cetakTransaksiQry.Query(newCetak.NoNota)
+// 	if err != nil {
+// 		log.Println("cetak transaksi ", err.Error())
+// 		return
+// 	}
+
+// 	for rows.Next() {
+// 		trans := Transaksi{}
+// 		rows.Scan(&trans.NamaPegawai)
+// 		transaksi = append(transaksi, trans)
+// 	}
+// 	return transaksi
+// }
