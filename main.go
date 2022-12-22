@@ -28,7 +28,7 @@ func main() {
 		fmt.Println("1. Login")
 		fmt.Println("0. Exit")
 		fmt.Println("========================================")
-		fmt.Println("Silakan masukkan pilihan anda : ")
+		fmt.Print("Silakan masukkan pilihan anda : ")
 		fmt.Scanln(&inputMenu)
 		if inputMenu == 1 {
 			var inputNama, inputPassword string
@@ -95,7 +95,7 @@ func main() {
 						var deleteUser user.User
 						fmt.Println("\n--- Halaman Hapus Pegawai ---")
 						fmt.Println("=============================")
-						fmt.Println("masukkan ID pegawai yang ingin dihapus :")
+						fmt.Print("masukkan ID pegawai yang ingin dihapus : ")
 						fmt.Scanln(&deleteUser.ID)
 						res, err := authMenu.Delete(deleteUser)
 						if err != nil {
@@ -114,7 +114,7 @@ func main() {
 						var deleteBarang barang.Barang
 						fmt.Println("\n--- Halaman Hapus Barang ---")
 						fmt.Println("=============================")
-						fmt.Println("masukkan ID barang yang ingin dihapus :")
+						fmt.Print("masukkan ID barang yang ingin dihapus : ")
 						fmt.Scanln(&deleteBarang.ID)
 						res, err := barangMenu.Delete(deleteBarang)
 						if err != nil {
@@ -157,7 +157,7 @@ func main() {
 						var deleteTransaksi transaksi.Transaksi
 						fmt.Println("\n--- Halaman Hapus Transaksi ---")
 						fmt.Println("===============================")
-						fmt.Println("masukkan nomor nota transaksi yang ingin dihapus :")
+						fmt.Print("masukkan nomor nota transaksi yang ingin dihapus : ")
 						fmt.Scanln(&deleteTransaksi.NoNota)
 						res, err := transaksiMenu.DeleteTransaksi(deleteTransaksi)
 						if err != nil {
@@ -230,9 +230,9 @@ func main() {
 						in := bufio.NewReader(os.Stdin)
 						fmt.Println("\n--- Halaman Edit Deskripsi Barang ---")
 						fmt.Println("=====================================")
-						fmt.Println("masukkan ID barang yang deskripsinya akan diedit :")
+						fmt.Print("masukkan ID barang yang deskripsinya akan diedit : ")
 						fmt.Scanln(&editBarang.ID)
-						fmt.Println("masukkan Deskripsi terbaru :")
+						fmt.Println("masukkan Deskripsi terbaru : ")
 						desc, _ := in.ReadString('\n')
 						desc = desc[:len(desc)-2]
 						editBarang.Deskripsi = desc
@@ -277,7 +277,7 @@ func main() {
 							fmt.Println("4. Cetak Nota")
 							fmt.Println("9. Logout")
 							fmt.Println("=========================")
-							fmt.Println("silakan masukkan pilihan anda :")
+							fmt.Print("silakan masukkan pilihan anda : ")
 							fmt.Scanln(&choice)
 							switch choice {
 							case 1:
@@ -337,7 +337,7 @@ func main() {
 									fmt.Println("1. Tambah Belanjaan")
 									fmt.Println("9. Back")
 									fmt.Println("=========================")
-									fmt.Println("silakan masukkan pilihan anda :")
+									fmt.Print("silakan masukkan pilihan anda : ")
 									fmt.Scanln(&input)
 									switch input {
 									case 1:
@@ -364,6 +364,15 @@ func main() {
 									}
 								}
 							case 4:
+								var newCetak transaksi.Transaksi
+
+								fmt.Print("Masukkan nomor Nota : ")
+								fmt.Scanln(&newCetak.NoNota)
+								hasil := transaksiMenu.Cetak(newCetak)
+								fmt.Println("\n======== Tokoku ========")
+								fmt.Println("--- Cetak Transaksi ---")
+								fmt.Println(" ")
+								fmt.Println(hasil)
 
 							case 9:
 								isTransaksi = false
