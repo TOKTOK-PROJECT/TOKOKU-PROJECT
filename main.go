@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"os/exec"
 	"todo/barang"
 	"todo/config"
 	"todo/item"
@@ -12,8 +13,13 @@ import (
 	"todo/user"
 )
 
+func screenClear() {
+	cmd := exec.Command("clear")
+	cmd.Stdout = os.Stdout
+	cmd.Run()
+}
+
 func main() {
-	var inputMenu int = 1
 	var cfg = config.ReadConfig()
 	var conn = config.ConnectSQL(*cfg)
 	var authMenu = user.AuthMenu{DB: conn}
@@ -21,6 +27,8 @@ func main() {
 	var konsumMenu = konsumen.KonsumMenu{DB: conn}
 	var transaksiMenu = transaksi.TransaksiMenu{DB: conn}
 	var itemMenu = item.ItemMenu{DB: conn}
+
+	var inputMenu int = 1
 
 	for inputMenu != 0 {
 		fmt.Println("-- Selamat Datang di Aplikasi TOKOKU --")
@@ -30,6 +38,7 @@ func main() {
 		fmt.Println("========================================")
 		fmt.Print("Silakan masukkan pilihan anda : ")
 		fmt.Scanln(&inputMenu)
+		screenClear()
 		if inputMenu == 1 {
 			var inputNama, inputPassword string
 			in := bufio.NewReader(os.Stdin)
@@ -47,7 +56,7 @@ func main() {
 			if err != nil {
 				fmt.Println(err.Error())
 			}
-
+			screenClear()
 			if res.ID == 1 && inputNama == "admin" && inputPassword == "admin" {
 				isLogin := true
 				fmt.Println("\n--- Login sebagai Admin ---")
@@ -62,8 +71,9 @@ func main() {
 					fmt.Println("5. Hapus Transaksi")
 					fmt.Println("9. Logout")
 					fmt.Println("==========================")
-					fmt.Print("Silakan masukkan pilihan:")
+					fmt.Print("Silakan masukkan pilihan : ")
 					fmt.Scanln(&loginMenu)
+					screenClear()
 					switch loginMenu {
 					case 1:
 						fmt.Println("\n--- Halaman Tambah Pegawai ---")
@@ -174,6 +184,7 @@ func main() {
 						fmt.Println(transaksiMenu.Show())
 					case 9:
 						isLogin = false
+						screenClear()
 					}
 				}
 			}
@@ -194,6 +205,7 @@ func main() {
 					fmt.Println("==========================")
 					fmt.Print("Masukkan pilihan anda : ")
 					fmt.Scanln(&loginMenu)
+					screenClear()
 					switch loginMenu {
 					case 1:
 						inputBarang := barang.Barang{}
@@ -250,9 +262,9 @@ func main() {
 						fmt.Println("\n--- Halaman Update Stok Barang ---")
 						fmt.Println("==================================")
 						var updateStok barang.Barang
-						fmt.Println("masukkan ID barang yang akan diedit :")
+						fmt.Print("masukkan ID barang yang akan diedit : ")
 						fmt.Scanln(&updateStok.ID)
-						fmt.Println("masukkan jumlah stok terbaru")
+						fmt.Print("masukkan jumlah stok terbaru : ")
 						fmt.Scanln(&updateStok.Stok)
 
 						res, err := barangMenu.UpdateStok(updateStok)
@@ -279,6 +291,7 @@ func main() {
 							fmt.Println("=========================")
 							fmt.Print("silakan masukkan pilihan anda : ")
 							fmt.Scanln(&choice)
+							screenClear()
 							switch choice {
 							case 1:
 								var newKonsumen konsumen.Konsumen
@@ -303,6 +316,7 @@ func main() {
 								} else {
 									fmt.Println("Gagal mendaftarkan pelanggan")
 								}
+								screenClear()
 							case 2:
 								fmt.Println("\n--- DAFTAR PELANGGAN ---")
 								fmt.Println("========================")
@@ -368,12 +382,16 @@ func main() {
 
 								fmt.Print("Masukkan nomor Nota : ")
 								fmt.Scanln(&newCetak.NoNota)
-								hasil := transaksiMenu.Cetak(newCetak)
 								fmt.Println("\n======== Tokoku ========")
 								fmt.Println("--- Cetak Transaksi ---")
 								fmt.Println(" ")
+								// pembeli := transaksiMenu.Pembeli(newCetak)
+								// kasir := transaksiMenu.Kasir(newCetak)
+								hasil, err := transaksiMenu.Cetak(newCetak)
+								if err != nil {
+									fmt.Println(err.Error())
+								}
 								fmt.Println(hasil)
-
 							case 9:
 								isTransaksi = false
 							}
