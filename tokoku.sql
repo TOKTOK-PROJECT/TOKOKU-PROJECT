@@ -75,3 +75,11 @@ SELECT * FROM konsumen k ;
 SELECT * FROM barang b ;
 SELECT * FROM transaksi t ;
 SELECT * FROM item i ;
+
+-- tampilkan nama joiner, aktivitas, dan nama pemilik aktivitas
+SELECT k.nama "Pembeli", p.nama "Kasir", b.nama_barang "Belanjaan", i.kuantitas "Jumlah"
+FROM item i 
+JOIN barang b  on b.id_barang  = i.id_barang  
+JOIN transaksi t  on t.no_nota  = i.no_nota  
+JOIN pegawai p  on p.id_pegawai  = t.id_pegawai 
+JOIN konsumen k on k.hp_konsumen = t.hp_konsumen ;
