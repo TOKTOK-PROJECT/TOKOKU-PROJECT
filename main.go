@@ -75,23 +75,23 @@ func main() {
 			pass, _ := in.ReadString('\n')
 			pass = pass[:len(pass)-2]
 			inputPassword = pass
-			res, err := authMenu.Login(inputNama, inputPassword)
+			login, err := authMenu.Login(inputNama, inputPassword)
 			if err != nil {
 				fmt.Println(err.Error())
 			}
 			screenClear()
-			if res.ID == 1 && inputNama == "admin" && inputPassword == "admin" {
+			if login.ID == 1 && inputNama == "admin" && inputPassword == "admin" {
 				isLogin := true
 				fmt.Println(colorText("\n--- Login sebagai Admin ---", "cyan"))
 				for isLogin {
 					loginMenu := 0
 					fmt.Println(colorText("\n------- MENU ADMIN -------", "green"))
 					fmt.Println(colorText("==========================", "green"))
-					fmt.Println(colorText("1. Tambah Pegawai", "yellow"))
-					fmt.Println(colorText("2. Hapus Pegawai", "yellow"))
+					fmt.Println(colorText("1. Hapus Transaksi", "yellow"))
+					fmt.Println(colorText("2. Hapus Pelanggan", "yellow"))
 					fmt.Println(colorText("3. Hapus Barang", "yellow"))
-					fmt.Println(colorText("4. Hapus Pelanggan", "yellow"))
-					fmt.Println(colorText("5. Hapus Transaksi", "yellow"))
+					fmt.Println(colorText("4. Hapus Pegawai", "yellow"))
+					fmt.Println(colorText("5. Tambah Pegawai", "yellow"))
 					fmt.Println(colorText("9. Logout", "yellow"))
 					fmt.Println(colorText("==========================", "green"))
 					fmt.Print(colorText("Silakan masukkan pilihan : ", "green"))
@@ -99,6 +99,95 @@ func main() {
 					screenClear()
 					switch loginMenu {
 					case 1:
+						var deleteTransaksi transaksi.Transaksi
+						fmt.Println(colorText("\n--- Halaman Hapus Transaksi ---", "green"))
+						fmt.Println(colorText("\n--- DAFTAR TRANSAKSI ---", "green"))
+						fmt.Println(colorText("========================", "green"))
+						fmt.Println(transaksiMenu.Show())
+						fmt.Println(colorText("========================", "green"))
+						fmt.Println(colorText("===============================", "green"))
+						fmt.Print(colorText("masukkan nomor nota transaksi yang ingin dihapus : ", "yellow"))
+						fmt.Scanln(&deleteTransaksi.NoNota)
+						res, err := transaksiMenu.DeleteTransaksi(deleteTransaksi)
+						if err != nil {
+							fmt.Println(err.Error())
+						}
+						if res {
+							fmt.Println(colorText("Sukses menghapus data transaksi", "yellow"))
+						} else {
+							fmt.Println(colorText("Gagal menghapus data transaksi", "red"))
+						}
+
+						fmt.Println(colorText("\n--- DAFTAR TRANSAKSI ---", "green"))
+						fmt.Println(colorText("========================", "green"))
+						fmt.Println(transaksiMenu.Show())
+					case 2:
+						var deleteKonsumen konsumen.Konsumen
+						fmt.Println(colorText("\n--- Halaman Hapus Pelanggan ---", "green"))
+						fmt.Println(colorText("\n--- DAFTAR PELANGGAN ---", "green"))
+						fmt.Println(colorText("========================", "green"))
+						fmt.Println(konsumMenu.Show())
+						fmt.Println(colorText("===============================", "green"))
+						fmt.Println(colorText("masukkan nomor HP pelanggan yang ingin dihapus :", "yellow"))
+						fmt.Scanln(&deleteKonsumen.HP)
+						res, err := konsumMenu.DeleteKonsumen(deleteKonsumen)
+						if err != nil {
+							fmt.Println(err.Error())
+						}
+						if res {
+							fmt.Println(colorText("Sukses menghapus data pelanggan", "yellow"))
+						} else {
+							fmt.Println(colorText("Gagal menghapus data pelanggan", "red"))
+						}
+
+						fmt.Println(colorText("\n--- DAFTAR PELANGGAN ---", "green"))
+						fmt.Println(colorText("========================", "green"))
+						fmt.Println(konsumMenu.Show())
+					case 3:
+						var deleteBarang barang.Barang
+						fmt.Println(colorText("\n--- Halaman Hapus Barang ---", "green"))
+						fmt.Println(colorText("\n--- DAFTAR BARANG ---", "green"))
+						fmt.Println(colorText("=====================", "green"))
+						fmt.Println(barangMenu.Show())
+						fmt.Println(colorText("=============================", "green"))
+						fmt.Print(colorText("masukkan ID barang yang ingin dihapus : ", "yellow"))
+						fmt.Scanln(&deleteBarang.ID)
+						res, err := barangMenu.Delete(deleteBarang)
+						if err != nil {
+							fmt.Println(err.Error())
+						}
+						if res {
+							fmt.Println(colorText("Sukses menghapus Barang", "yellow"))
+						} else {
+							fmt.Println(colorText("Gagal menghapus Barang", "red"))
+						}
+
+						fmt.Println(colorText("\n--- DAFTAR BARANG ---", "green"))
+						fmt.Println(colorText("=====================", "green"))
+						fmt.Println(barangMenu.Show())
+					case 4:
+						var deleteUser user.User
+						fmt.Println(colorText("\n--- Halaman Hapus Pegawai ---", "green"))
+						fmt.Println(colorText("\n--- DAFTAR NAMA PEGAWAI ---", "green"))
+						fmt.Println(colorText("========================", "green"))
+						fmt.Println(authMenu.Show())
+						fmt.Println(colorText("=============================", "green"))
+						fmt.Print(colorText("masukkan ID pegawai yang ingin dihapus : ", "yellow"))
+						fmt.Scanln(&deleteUser.ID)
+						res, err := authMenu.Delete(deleteUser)
+						if err != nil {
+							fmt.Println(err.Error())
+						}
+						if res {
+							fmt.Println(colorText("Sukses menghapus Pegawai", "yellow"))
+						} else {
+							fmt.Println(colorText("Gagal menghapus Pegawai", "red"))
+						}
+
+						fmt.Println(colorText("\n--- DAFTAR PEGAWAI ---", "green"))
+						fmt.Println(colorText("======================", "green"))
+						fmt.Println(authMenu.Show())
+					case 5:
 						fmt.Println(colorText("\n--- Halaman Tambah Pegawai ---", "green"))
 						fmt.Println(colorText("==============================", "green"))
 						var newUser user.User
@@ -124,87 +213,6 @@ func main() {
 						fmt.Println(colorText("\n--- DAFTAR PEGAWAI ---", "green"))
 						fmt.Println(colorText("======================", "green"))
 						fmt.Println(authMenu.Show())
-					case 2:
-						var deleteUser user.User
-						fmt.Println(colorText("\n--- Halaman Hapus Pegawai ---", "green"))
-						fmt.Println(colorText("=============================", "green"))
-						fmt.Print(colorText("masukkan ID pegawai yang ingin dihapus : ", "yellow"))
-						fmt.Scanln(&deleteUser.ID)
-						res, err := authMenu.Delete(deleteUser)
-						if err != nil {
-							fmt.Println(err.Error())
-						}
-						if res {
-							fmt.Println(colorText("Sukses menghapus Pegawai", "yellow"))
-						} else {
-							fmt.Println(colorText("Gagal menghapus Pegawai", "red"))
-						}
-
-						fmt.Println(colorText("\n--- DAFTAR PEGAWAI ---", "green"))
-						fmt.Println(colorText("======================", "green"))
-						fmt.Println(authMenu.Show())
-					case 3:
-						var deleteBarang barang.Barang
-						fmt.Println(colorText("\n--- Halaman Hapus Barang ---", "green"))
-						fmt.Println(colorText("=============================", "green"))
-						fmt.Print(colorText("masukkan ID barang yang ingin dihapus : ", "yellow"))
-						fmt.Scanln(&deleteBarang.ID)
-						res, err := barangMenu.Delete(deleteBarang)
-						if err != nil {
-							fmt.Println(err.Error())
-						}
-						if res {
-							fmt.Println(colorText("Sukses menghapus Barang", "yellow"))
-						} else {
-							fmt.Println(colorText("Gagal menghapus Barang", "red"))
-						}
-
-						fmt.Println(colorText("\n--- DAFTAR BARANG ---", "green"))
-						fmt.Println(colorText("=====================", "green"))
-						fmt.Println(barangMenu.Show())
-					case 4:
-						var deleteKonsumen konsumen.Konsumen
-						fmt.Println(colorText("\n--- Halaman Hapus Pelanggan ---", "green"))
-						fmt.Println(colorText("===============================", "green"))
-						fmt.Println(colorText("masukkan nomor HP pelanggan yang ingin dihapus :", "yellow"))
-						fmt.Scanln(&deleteKonsumen.HP)
-						res, err := konsumMenu.DeleteKonsumen(deleteKonsumen)
-						if err != nil {
-							fmt.Println(err.Error())
-						}
-						if res {
-							fmt.Println(colorText("Sukses menghapus data pelanggan", "yellow"))
-						} else {
-							fmt.Println(colorText("Gagal menghapus data pelanggan", "red"))
-						}
-
-						fmt.Println(colorText("\n--- DAFTAR PELANGGAN ---", "green"))
-						fmt.Println(colorText("========================", "green"))
-						fmt.Println(konsumMenu.Show())
-					case 5:
-						fmt.Println(colorText("\n--- DAFTAR TRANSAKSI ---", "green"))
-						fmt.Println(colorText("========================", "green"))
-						fmt.Println(transaksiMenu.Show())
-						fmt.Println(colorText("========================", "green"))
-
-						var deleteTransaksi transaksi.Transaksi
-						fmt.Println(colorText("\n--- Halaman Hapus Transaksi ---", "green"))
-						fmt.Println(colorText("===============================", "green"))
-						fmt.Print(colorText("masukkan nomor nota transaksi yang ingin dihapus : ", "yellow"))
-						fmt.Scanln(&deleteTransaksi.NoNota)
-						res, err := transaksiMenu.DeleteTransaksi(deleteTransaksi)
-						if err != nil {
-							fmt.Println(err.Error())
-						}
-						if res {
-							fmt.Println(colorText("Sukses menghapus data transaksi", "yellow"))
-						} else {
-							fmt.Println(colorText("Gagal menghapus data transaksi", "red"))
-						}
-
-						fmt.Println(colorText("\n--- DAFTAR TRANSAKSI ---", "green"))
-						fmt.Println(colorText("========================", "green"))
-						fmt.Println(transaksiMenu.Show())
 					case 9:
 						isLogin = false
 						screenClear()
@@ -212,7 +220,7 @@ func main() {
 				}
 			}
 
-			if res.ID > 0 && inputNama != "admin" {
+			if login.ID > 0 && inputNama != "admin" {
 				isLogin := true
 				fmt.Println(colorText("\n--- Login Sebagai Pegawai ---", "cyan"))
 				for isLogin {
@@ -245,7 +253,7 @@ func main() {
 						inputBarang.Deskripsi = desc
 						fmt.Print(colorText("Masukkan Jumlah (Stok) : ", "yellow"))
 						fmt.Scanln(&inputBarang.Stok)
-						inputBarang.Owner = res.ID
+						inputBarang.Owner = login.ID
 						barRes, err := barangMenu.Insert(inputBarang)
 						if err != nil {
 							fmt.Println(err.Error())
@@ -264,6 +272,9 @@ func main() {
 						var editBarang barang.Barang
 						in := bufio.NewReader(os.Stdin)
 						fmt.Println(colorText("\n--- Halaman Edit Deskripsi Barang ---", "green"))
+						fmt.Println(colorText("\n--- DAFTAR BARANG ---", "green"))
+						fmt.Println(colorText("=====================", "green"))
+						fmt.Println(barangMenu.Show())
 						fmt.Println(colorText("=====================================", "green"))
 						fmt.Print(colorText("masukkan ID barang yang deskripsinya akan diedit : ", "yellow"))
 						fmt.Scanln(&editBarang.ID)
@@ -283,6 +294,9 @@ func main() {
 						fmt.Println(editBarang)
 					case 4:
 						fmt.Println(colorText("\n--- Halaman Update Stok Barang ---", "green"))
+						fmt.Println(colorText("\n--- DAFTAR BARANG ---", "green"))
+						fmt.Println(colorText("=====================", "green"))
+						fmt.Println(barangMenu.Show())
 						fmt.Println(colorText("==================================", "green"))
 						var updateStok barang.Barang
 						fmt.Print(colorText("masukkan ID barang yang akan diedit : ", "yellow"))
@@ -329,7 +343,7 @@ func main() {
 								hp, _ := in.ReadString('\n')
 								hp = hp[:len(hp)-2]
 								newKonsumen.HP = hp
-								newKonsumen.IdPegawai = res.ID
+								newKonsumen.IdPegawai = login.ID
 								res, err := konsumMenu.RegistKonsumen(newKonsumen)
 								if err != nil {
 									fmt.Println(err.Error())
@@ -349,7 +363,7 @@ func main() {
 								in := bufio.NewReader(os.Stdin)
 								fmt.Println(colorText("\n--- Halaman Buat Transaksi ---", "green"))
 								fmt.Println(colorText("===============================", "green"))
-								newTransaksi.IdPegawai = res.ID
+								newTransaksi.IdPegawai = login.ID
 								fmt.Print(colorText("Masukkan nomor HP pelanggan : ", "yellow"))
 								hp, _ := in.ReadString('\n')
 								hp = hp[:len(hp)-2]
@@ -382,6 +396,9 @@ func main() {
 										fmt.Println(colorText("================================", "green"))
 										fmt.Print(colorText("Masukkan nomor nota : ", "yellow"))
 										fmt.Scanln(&newItem.NoNota)
+										fmt.Println(colorText("\n--- DAFTAR BARANG ---", "green"))
+										fmt.Println(colorText("=====================", "green"))
+										fmt.Println(barangMenu.Show())
 										// newItem.NoNota = newTransaksi.NoNota
 										fmt.Print(colorText("Masukkan ID barang : ", "yellow"))
 										fmt.Scanln(&newItem.IdBarang)
@@ -402,6 +419,10 @@ func main() {
 								}
 							case 4:
 								var newCetak transaksi.Transaksi
+								fmt.Println(colorText("\n--- Halaman Cetak Nota ---", "green"))
+								fmt.Println(colorText("\n--- DAFTAR TRANSAKSI ---", "green"))
+								fmt.Println(colorText("========================", "green"))
+								fmt.Println(transaksiMenu.Show())
 
 								fmt.Print(colorText("Masukkan nomor Nota : ", "yellow"))
 								fmt.Scanln(&newCetak.NoNota)
