@@ -6,6 +6,7 @@ Tokoku adalah sebuah aplikasi yang digunakan untuk mencatat kegiatan transaksi d
 Aplikasi ini menggunakan bahasa pemrograman Go atau Golang dan menggunakan database MySQL.
 
 Menu yang disediakan:
+
 Bagi Admin:
 * Tambah dan Hapus Data Pegawai
 * Hapus Data Barang, Pelanggan, dan Transaksi
