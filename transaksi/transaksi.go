@@ -98,3 +98,31 @@ func (tm *TransaksiMenu) Show() (transaksi []Transaksi) {
 	}
 	return transaksi
 }
+
+func (tm *TransaksiMenu) CetakNota(newCetak Transaksi) (bool, error) {
+	addQry, err := tm.DB.Prepare("SELECT item.Kuantitas, item.IdBarang,  item.NoNota, konsumen.HP as konsumen, transaksi.tanggal_cetak,transaksi.id_pegawai,user.nama as user FROM transaksi INNER JOIN konsumen on konsumen.HP = transaksi.NoNota_konsumen INNER JOIN pegawai user on transaksi.id_pegawai = user.id Left join item on item.transaksi_NoNota = transaksi.NoNota WHERE transaksi.HP_konsumen = ?")
+	if err != nil {
+		log.Println("Select Cetak prepare", err.Error())
+		return false, errors.New("prepare Select Cetak error")
+	}
+
+	res, err := addQry.Exec(newCetak.HpKonsumen)
+	if err != nil {
+		log.Println("Select cetak", err.Error())
+		return false, errors.New("Select Cetak error")
+	}
+
+	affRows, err := res.RowsAffected()
+
+	if err != nil {
+		log.Println("after Select Cetak", err.Error())
+		return false, errors.New("after Select cetak error")
+	}
+
+	if affRows <= 0 {
+		log.Println("No record affected")
+		return true, errors.New("No record")
+	}
+
+	return true, nil
+}
